@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Graph from "./graph";
@@ -18,10 +19,11 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import AddIcon from '@mui/icons-material/Add';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Indicators from "./indicators";
-import DropDownMenu from "./dropdownmenu";
+import EditVariablesPanel from "@/components/EditVariablesPanel/page";
 
 
 export default function Dashboard() {
+  const [showPanel, setShowPanel] = useState(false);
   return (
     <div className="flex min-h-screen bg-black text-white">
       {/* Sidebar */}
@@ -88,9 +90,28 @@ export default function Dashboard() {
               <button className="bg-[#242424] text-gray-400 px-1.5 py-1 border border-gray-600 rounded-lg flex items-center justify-center">
                 <span className="material-icons text-xs"><HistoryIcon/></span>
               </button>
-              <button className="bg-[#242424] text-white px-2 py-1.5 border border-gray-600 rounded-lg text-sm">
+              
+              
+
+              
+              <button 
+                onClick={() => setShowPanel(true)}
+                className="bg-[#242424] text-white px-2 py-1.5 border border-gray-600 rounded-lg text-sm"
+              >
                 Edit variables
               </button>
+              {showPanel && (
+                <>
+                  <div 
+                    className="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-[100]"
+                    onClick={() => setShowPanel(false)}
+                  />
+                  <div className="z-[101]">
+                    <EditVariablesPanel onClose={() => setShowPanel(false)} />
+                  </div>
+                </>
+              )}
+
               <button className="bg-[#242424] text-gray-400 px-1.5 py-1 border border-gray-600 rounded-lg flex items-center justify-center">
                 <span className="material-icons text-xs"><FileUploadIcon/></span>
               </button>
@@ -147,7 +168,17 @@ export default function Dashboard() {
               {/* Graph Placeholder */}
               <div className="h-[420px] w-[92%] bg-[#222324] border border-[#525252] rounded-md flex items-center justify-center relative">
                 <div className="absolute top-10 right-16 z-50">
-                 <DropDownMenu/>
+                <Select defaultValue="unsatisfied">
+                  <SelectTrigger className="w-[198px] border border-[#525252] bg-[#18181A80]">
+                      <SelectValue placeholder="Unsatisfied Demand %" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#18181A] border border-[#525252] text-white">
+                      <SelectItem value="unsatisfied">Unsatisfied Demand %</SelectItem>
+                      <SelectItem value="satisfied">Satisfied Demand %</SelectItem>
+                      <SelectItem value="profit">Profit</SelectItem>
+                      <SelectItem value="revenue">Revenue</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <Graph/>
               </div>
