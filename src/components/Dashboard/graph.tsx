@@ -1,7 +1,9 @@
 'use client'
 import { Select, SelectContent, SelectItem} from "@/components/ui/select";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
+import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
 // Dummy Data for the Graph
 const dummyGraphData = [
   { month: "Apr", value: 20000 },
@@ -43,13 +45,34 @@ export default function Graph() {
         dx={-20}
       />
       <Tooltip 
-        contentStyle={{ backgroundColor: "#333", border: "none" }}
+        contentStyle={{ 
+          backgroundColor: "#333", 
+          border: "none",
+          padding: "8px 12px",
+          borderRadius: "4px"
+        }}
         cursor={{
           stroke: "#E0FF7F",
           strokeDasharray: "5 5",
           strokeWidth: 2,
         }}
-        formatter={(value:any) => [`$${value/1000}k`, 'Value']}
+        formatter={(value:any) => {
+          const target = 95000;
+          const percentFromTarget = ((value - target) / target * 100).toFixed(1);
+          const aboveBelow = value > 80000 ? 'above' : 'below';
+          return [
+            <div>
+              <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: '#22232433',}}>
+                <span style={{fontSize: '17px', fontWeight: 'bold', color: '#fff'}}>${(value/1000).toFixed(1)}k</span>
+                <HelpOutlineIcon sx={{fontSize: 16, color: 'gray', marginLeft: '40px'}} />
+              </div>
+              <div style={{fontSize: '12px', color: '#999', display: 'flex', alignItems: 'center', gap: '4px'}}>
+                {aboveBelow === 'above' ? <ArrowCircleUpTwoToneIcon className="text-[#DCFF7FFD]"/> : <ArrowCircleDownTwoToneIcon className="text-[#DCFF7FFD]"/>} {Math.abs(Number(percentFromTarget))}% {aboveBelow} target
+              </div>
+            </div>
+          ];
+        }}
+        labelFormatter={() => ''}
       />
       <Line 
         type="linear" 
