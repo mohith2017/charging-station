@@ -1,4 +1,5 @@
-import React from "react";
+'use client'
+import React, { useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
@@ -12,7 +13,38 @@ interface EditVariablesPanelProps {
   onClose: () => void;
 }
 
-export default function EditVariablesPanel({ onClose }: EditVariablesPanelProps) {
+const EditVariablesPanel = ({ onClose }: EditVariablesPanelProps) => {
+  const [selectedVariables, setSelectedVariables] = useState<string[]>(['Fleet Sizing']);
+  const [showDescription, setShowDescription] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    const timeout = setTimeout(() => {
+      setShowDescription(true);
+    }, 1500); 
+    setHoverTimeout(timeout);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      setHoverTimeout(null);
+    }
+  };
+
+  const toggleVariable = (variable: string) => {
+    setSelectedVariables(prev => {
+      const newSelection = prev.includes(variable) 
+        ? prev.filter(v => v !== variable)
+        : [...prev, variable];
+      
+      if (!newSelection.includes('Co2 Distribution')) {
+        setShowDescription(false);
+      }
+      return newSelection;
+    });
+  };
+
   return (
     <div className="fixed top-0 right-0 h-full w-[48%] bg-[#0E0D0D] border-l border-[#525252] shadow-xl z-50 overflow-y-auto">
       {/* Header Section */}
@@ -58,18 +90,40 @@ export default function EditVariablesPanel({ onClose }: EditVariablesPanelProps)
                   <AddIcon sx={{ fontSize: 16 }}/>
                 </div>
               </button>
-              <button className="px-4 py-2 bg-[#525252] text-[#DCFF7FFD] rounded-full text-sm border border-[#DCFF7FFD] flex items-center justify-between min-w-[160px]">
+              <button 
+                onClick={() => toggleVariable('Co2 Distribution')}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                className={`px-4 py-2 ${
+                  selectedVariables.includes('Co2 Distribution')
+                    ? 'bg-[#525252] text-[#DCFF7FFD] border-[#DCFF7FFD]'
+                    : 'bg-[#333333] text-gray-300 border-[#525252]'
+                } rounded-full text-sm border flex items-center justify-between min-w-[160px]`}
+              >
                 <span>Co2 Distribution</span>
                 <div className="flex items-center gap-1 ml-3">
                   <AutoAwesomeIcon sx={{ fontSize: 16 }}/>
-                  <DoneIcon sx={{ fontSize: 16 }}/>
+                  {selectedVariables.includes('Co2 Distribution') 
+                    ? <DoneIcon sx={{ fontSize: 16 }}/> 
+                    : <AddIcon sx={{ fontSize: 16 }}/>
+                  }
                 </div>
               </button>
-              <button className="px-4 py-2 bg-[#525252] text-[#DCFF7FFD] rounded-full text-sm border border-[#DCFF7FFD] flex items-center justify-between min-w-[160px]">
+              <button 
+                onClick={() => toggleVariable('Fleet Sizing')}
+                className={`px-4 py-2 ${
+                  selectedVariables.includes('Fleet Sizing')
+                    ? 'bg-[#525252] text-[#DCFF7FFD] border-[#DCFF7FFD]'
+                    : 'bg-[#333333] text-gray-300 border-[#525252]'
+                } rounded-full text-sm border flex items-center justify-between min-w-[160px]`}
+              >
                 <span>Fleet Sizing</span>
                 <div className="flex items-center gap-1 ml-3">
                   <AutoAwesomeIcon sx={{ fontSize: 16 }}/>
-                  <DoneIcon sx={{ fontSize: 16 }}/>
+                  {selectedVariables.includes('Fleet Sizing') 
+                    ? <DoneIcon sx={{ fontSize: 16 }}/> 
+                    : <AddIcon sx={{ fontSize: 16 }}/>
+                  }
                 </div>
               </button>
             </div>
@@ -160,20 +214,17 @@ export default function EditVariablesPanel({ onClose }: EditVariablesPanelProps)
         </div>
 
           {/* Description Section */}
-
-        <div className="bg-[#222324] border border-[#525252] rounded-b-lg p-10">
-          {/* <div className="pt-4 border-t border-[#525252]"> */}
-            <p className="text-lg font-semibold text-gray-300 flex items-center gap-1">
-              Co2 Distribution
-              <InfoOutlinedIcon sx={{ fontSize: 16 }} className="text-white"/>
-            </p>
-            <p className="text-sm text-gray-400 mt-2">
-              But what truly sets Switch apart is its versatility. It can be used as
-              a scooter, a bike, or even a skateboard, making it suitable for
-              people of all ages. Whether you're a student, a professional, or a
-              senior citizen, Switch adapts to your needs and lifestyle.
-            </p>
-          {/* </div> */}
+        <div className={`bg-[#222324] border border-[#525252] rounded-b-lg p-10 ${!showDescription ? 'hidden' : ''}`}>
+          <p className="text-lg font-semibold text-gray-300 flex items-center gap-1">
+            Co2 Distribution
+            <InfoOutlinedIcon sx={{ fontSize: 16 }} className="text-white"/>
+          </p>
+          <p className="text-sm text-gray-400 mt-2">
+            But what truly sets Switch apart is its versatility. It can be used as
+            a scooter, a bike, or even a skateboard, making it suitable for
+            people of all ages. Whether you're a student, a professional, or a
+            senior citizen, Switch adapts to your needs and lifestyle.
+          </p>
         </div>
       </div>
 
@@ -195,3 +246,5 @@ export default function EditVariablesPanel({ onClose }: EditVariablesPanelProps)
     </div>
   );
 };
+
+export default EditVariablesPanel;
