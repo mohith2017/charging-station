@@ -17,6 +17,8 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import AddIcon from '@mui/icons-material/Add';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { signOut } from "next-auth/react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Indicators from "./indicators";
 import EditVariablesPanel from "@/components/EditVariablesPanel/page";
@@ -46,7 +48,13 @@ export default function Dashboard() {
         <button className="text-gray-500 hover:text-white">
           <span className="material-icons"><SettingsIcon/></span>
         </button>
-
+        <button 
+          onClick={() => signOut()}
+          className="text-gray-500 hover:text-white"
+          title="Sign Out"
+        >
+          <span className="material-icons"><LogoutIcon/></span>
+        </button>
       </nav>
 
       {/* Main Content */}
