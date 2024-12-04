@@ -37,14 +37,14 @@ export default function Dashboard() {
         <button className="text-gray-500 hover:text-white">
           <span className="material-icons"><NotificationsIcon/></span>
         </button>
-        <button className="text-gray-500 hover:text-white">
-          <span className="material-icons"><SettingsIcon/></span>
-        </button>
         <button className="mt-auto text-gray-500 hover:text-white">
           <span className="material-icons"><AssignmentIcon/></span>
         </button>
         <button className="mt-auto text-gray-500 hover:text-white">
           <span className="material-icons"><CloudUploadIcon/></span>
+        </button>
+        <button className="text-gray-500 hover:text-white">
+          <span className="material-icons"><SettingsIcon/></span>
         </button>
 
       </nav>
